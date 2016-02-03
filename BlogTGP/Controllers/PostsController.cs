@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+// using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
+// using System.Web;
 using System.Web.Mvc;
 using BlogTGP.Models;
 using BlogTGP.Models.Code_First;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace BlogTGP.Controllers
 {
@@ -18,7 +19,7 @@ namespace BlogTGP.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts
-        public ActionResult Admin()
+        public ActionResult Admin(int? page)
         {
             //var es = new EmailService();
             //var msg = new IdentityMessage();
@@ -26,15 +27,23 @@ namespace BlogTGP.Controllers
             //msg.Subject = "Testing email service from Blog";
             //msg.Destination = "tpeara@gmail.com";
             //es.SendAsync(msg);
-
-            return View(db.Posts.OrderByDescending(p=>p.Created).Take(12).ToList());
+             
+            int pageNumber = (page ?? 1);
+            int pageSize = 9;
+            return View(db.Posts.OrderByDescending(p=>p.Created).ToPagedList(pageNumber,pageSize));
+            
+            //return View(db.Posts.OrderByDescending(p=>p.Created).Take(12).ToList());
         }
 
 
         // GET: Posts
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.Posts.OrderByDescending(p => p.Created).Take(12).ToList());
+             
+            int pageNumber = (page ?? 1);
+            int pageSize = 9;
+            return View(db.Posts.OrderByDescending(p => p.Created).ToPagedList(pageNumber, pageSize));
+            
         }
 
 
@@ -122,6 +131,7 @@ namespace BlogTGP.Controllers
             return View(post);
         }
 
+
         // GET: Posts/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -177,6 +187,42 @@ namespace BlogTGP.Controllers
             return View(post);
         }
 
+
+
+        // GET: Posts/EditComment/5
+        public ActionResult EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Comment comment = db.Comments.Find(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(comment);
+        }
+
+        // POST: Posts/EditComment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditComment([Bind(Include = "id,PostId,AuthorId,Created,Updated,Body")] Comment comment)
+        {
+            if (ModelState.IsValid)
+            {
+                comment.Updated = System.DateTimeOffset.Now;
+
+                db.Entry(comment).State = EntityState.Modified;  // modifies entire row
+                db.SaveChanges();
+
+                return RedirectToAction("Details");
+            }
+            return View(comment);
+        }
+
+
+
         // GET: Posts/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -199,6 +245,60 @@ namespace BlogTGP.Controllers
         {
             Post post = db.Posts.Find(id);
             db.Posts.Remove(post);
+            db.SaveChanges();
+            return RedirectToAction("Admin");
+        }
+        
+
+        // ************************************************************************* //
+
+        // POST: Posts/CreateComment
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateComment([Bind(Include = "PostId,Body")] Comment comment, string alias)
+        {
+            Console.WriteLine("Inside CreateComment - PostId {0} Body {1}", comment.PostId, comment.Body);
+            var slug = db.Posts.Find(comment.PostId).Slug;
+            if (ModelState.IsValid)
+            {
+                comment.AuthorId = User.Identity.GetUserId();
+                var user = db.Users.Find(comment.AuthorId);
+                user.DisplayName = alias;
+                comment.Created = System.DateTimeOffset.Now;
+
+                db.Comments.Add(comment);
+                db.SaveChanges();
+                // return RedirectToAction("Details", new { Slug = slug } );
+            }
+            return RedirectToAction("Details", new { Slug = slug });
+        }
+
+
+
+
+        // GET: Posts/Delete/5
+        public ActionResult DeleteComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Comment comment = db.Comments.Find(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(comment);
+        }
+
+        // POST: Posts/Delete/5
+        [HttpPost, ActionName("DeleteComment")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteCommentConfirmed(int id)
+        {
+            Comment comment = db.Comments.Find(id);
+            db.Comments.Remove(comment);
             db.SaveChanges();
             return RedirectToAction("Admin");
         }

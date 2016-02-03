@@ -1,92 +1,43 @@
-﻿@model IEnumerable<BlogTGP.Models.Post>
+﻿@using PagedList;
+@using PagedList.Mvc;
 
+@model IPagedList<BlogTGP.Models.Post>
 @{
     ViewBag.Title = "Admin";
 }
-<style>
-    /* styles for '...' */
-    .block-with-text {
-        /* hide text if it more than N lines  */
-        overflow: hidden;
-        /* for set '...' in absolute position */
-        position: relative;
-        /* use this value to count block height */
-        line-height: 1.2em;
-        /* max-height = line-height (1.2) * lines max number (3) */
-        max-height: 3.6em;
-        /* fix problem when last visible word doesn't adjoin right side  */
-        text-align: justify;
-        /* place for '...' */
-        margin-right: -1em;
-        padding-right: 1em;
-    }
-        /* create the ... */
-        .block-with-text:before {
-            /* points in the end */
-            content: '...';
-            /* absolute position */
-            position: absolute;
-            /* set position to right bottom corner of block */
-            right: 0;
-            bottom: 0;
-        }
-        /* hide ... if we have text, which is less than or equal to max lines */
-        .block-with-text:after {
-            /* points in the end */
-            content: '';
-            /* absolute position */
-            position: absolute;
-            /* set position to right bottom corner of text */
-            right: 0;
-            /* set width and height */
-            width: 1em;
-            height: 1em;
-            margin-top: 0.2em;
-            /* bg color = bg color under block */
-            background: white;
-        }
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
-        td.test div
-{
-    white-space: nowrap;
-    width: 70px;
-    overflow: hidden;
-    border: 1px solid #000000;
-    text-overflow: ellipsis;
-}
-
-</style>
 <h2>Index</h2>
 
 @*<table class="table" style="max-height:2em; overflow:hidden;">*@
 <table style="width: 100%;">
-    <colgroup width="7%" span="3" style="vertical-align:top;" ></colgroup>
-    <colgroup width="21%" span="1"></colgroup>
-    <colgroup width="34%" span="1" style="text-overflow:clip; word-wrap: break-word;"></colgroup>
-    <colgroup width="10%" span="1" ></colgroup>
+    <colgroup width="7%" span="3" style="vertical-align:top;"></colgroup>
+    <colgroup width="21%" span="1"style="padding: 0px 5px;"></colgroup>
+    <colgroup width="34%" span="1" style="text-overflow:clip; word-wrap: break-word; padding: 0px 5px;"></colgroup>
+    <colgroup width="10%" span="1" style="padding: 0px 5px;"></colgroup>
     <colgroup width="14%" span="1"></colgroup>
-        
+
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Created)
+            Created
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Updated)
+            Updated
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Category)
+            Category
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            Title
         </th>
         @*<th>
                 @Html.DisplayNameFor(model => model.Slug)
             </th>*@
         <th>
-            @Html.DisplayNameFor(model => model.Body)
+            Body
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MediaURL)
+            MediaURL
         </th>
         <th>
             Actions
@@ -117,7 +68,7 @@
                 <a href="@Url.Action("AdminDetails", "Posts", new { slug = item.Slug })">@item.Title</a>
             </td>
 
-            
+
             <td height="20px" width="100px">
                 <div id="long-column">
                     <p>@Html.Raw(item.Body)</p>
@@ -132,8 +83,8 @@
             <td>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    @Html.ActionLink("Edit/", "Edit", new { id = item.id })
-
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id })
+                    <span>/</span>
                     @Html.ActionLink("Delete", "Delete", new { id = item.id })
                 }
 
@@ -143,4 +94,6 @@
 
 </table>
 
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Admin", new { page }))
 

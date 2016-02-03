@@ -21,13 +21,12 @@
         @*@Html.HiddenFor(model => model.Title)
             @Html.HiddenFor(model => model.Slug)*@
 
-        @*<div class="form-group">
+        <!-- <div class="form-group">
                 @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                 @
                     @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
                 </div>
-            </div>*@
+            </div> -->
 
 
         <div class="form-group">
@@ -68,7 +67,6 @@
             </div>
         </div>
 
-
         <div class="form-group">
             @Html.LabelFor(model => model.Slug, htmlAttributes: new { @class = "control-label col-md-2" })
             @*<div class="col-md-10" style="box-sizing:border-box; padding:6px 27px; ">*@
@@ -79,9 +77,6 @@
 
             </div>
         </div>
-
-
-
 
         <div class="form-group">
             @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })

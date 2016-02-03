@@ -1,9 +1,12 @@
-﻿@model IEnumerable<BlogTGP.Models.Post>
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<BlogTGP.Models.Post>
 
 @{
     ViewBag.Title = "Index";
 }
-
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 <div style="height: 10px"></div>
 <div class="container text-center">
@@ -90,11 +93,10 @@
 }
 
 <hr />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 
 
-<div class="text-center older-post-link">
-    <a href="#">Older Posts</a>
-</div>
 
 
 

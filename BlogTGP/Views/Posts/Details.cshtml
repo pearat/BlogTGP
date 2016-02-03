@@ -20,7 +20,7 @@
         <img src="~/images/timbo-logo.png" />
     </a>
 </div>
-
+                                                      {
 
 <hr>
 <div class="space-40"></div>
@@ -51,8 +51,11 @@
                                     <img src="@Model.MediaURL" alt="Graphic for Post"
                                          class="img-responsive full-post-img" />
                                 </li>
-                                @*<li><img src="~/images/MilosRaonic.jpg" alt="Raonic"
-                                    class="img-responsive full-post-img" /></li>*@
+                                @*
+                                    <li>
+                                        <img src="~/images/MilosRaonic.jpg" alt="Raonic"
+                                             class="img-responsive full-post-img" />
+                                    </li>*@
                                 <li>
                                     <img src="~/images/richard-gasquet-topspin-backhand-grip.jpg" alt="Gasquet"
                                          class="img-responsive full-post-img" />
@@ -62,7 +65,8 @@
                                          class="img-responsive full-post-img" />
                                 </li>
 
-                                @*<li><img src="~/images/tennisBlue.jpg" alt="" class="img-responsive" /></li>
+                                @*
+                                    <li><img src="~/images/tennisBlue.jpg" alt="" class="img-responsive" /></li>
                                     <li><img src="~/images/tForever.jpg" alt="" class="img-responsive" /></li>*@
                             </ul>
                         </div>
@@ -71,9 +75,11 @@
                 <div class="post-entry">
 
                     @Html.Raw(Model.Body);
-                    @*<blockquote><p>
+                    @*<blockquote>
+                            <p>
                                 Esistono innumerevoli variazioni dei passaggi del Lorem Ipsum, ma la maggior parte hanno subito delle variazioni del tempo, a causa dell’inserimento di passaggi ironici, o di sequenze casuali di caratteri palesemente poco verosimili. Se si decide di utilizzare un passaggio del Lorem Ipsum, è bene essere certi che non contenga nulla di imbarazzante.
-                        </p></blockquote>*@
+                            </p>
+                        </blockquote>*@
                 </div><!--post entry-->
 
                 <div class="post-meta">
@@ -138,7 +144,8 @@
                                     <i class="fa fa-facebook"></i>
                                 </a>
                             </li>
-                            @*<li>
+                            @*
+                                <li>
                                     <a href="#" class="social-icon-sm si-border-round si-gray-round si-twitter">
                                         <i class="fa fa-twitter"></i>
                                         <i class="fa fa-twitter"></i>
@@ -150,7 +157,8 @@
                                     <i class="fa fa-facebook"></i>
                                 </a>
                             </li>
-                            @*<li>
+                            @*
+                                <li>
                                     <a href="#" class="social-icon-sm si-border-round si-gray-round si-pinterest">
                                         <i class="fa fa-pinterest"></i>
                                         <i class="fa fa-pinterest"></i>
@@ -171,99 +179,66 @@
             <div class="space-30"></div>
             <hr>
             <!--comments-->
-            <h5 class="margin-b-30">4 Comments</h5>
-            <div class="media comments">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-circle" width="60" src="~/images/CAP.jpg" alt="Timbo">
-                    </a>
 
+            <h5 class="margin-b-30">2 Comments</h5>
+
+
+            @foreach (var com in Model.Comments)
+            {
+                <div class="media comments">
+                    <div class="media-left">
+                        <p>@com.Created.DateTime.ToLongDateString()</p>
+
+                    </div>
+                    <div class="media-body">
+                        <h6 class="media-heading">@com.Author.Email</h6>
+                        <p>@com.Body</p>
+                    </div>
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Amanda</h4>
-                    <p>
-                        Esistono innumerevoli variazioni dei passaggi del Lorem Ipsum, ma la maggior parte hanno subito delle variazioni del tempo, a causa dell’inserimento di passaggi ironici.
-                    </p>
-                    <a href="#">Comment</a>
-                </div>
-            </div>
-            <div class="media comments">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-circle" width="60" src="~/images/me.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Enrico</h4>
-                    <p>
-                        Esistono innumerevoli variazioni dei passaggi del Lorem Ipsum, ma la maggior parte hanno subito delle variazioni del tempo, a causa dell’inserimento di passaggi ironici.
-                    </p>
-                    <a href="#">Comment</a>
-                </div>
-            </div>
-            <div class="media comments">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-circle" width="60" src="~/images/me-2.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Chuck</h4>
-                    <p>
-                        Esistono innumerevoli variazioni dei passaggi del Lorem Ipsum, ma la maggior parte hanno subito delle variazioni del tempo, a causa dell’inserimento di passaggi ironici.
-                    </p>
-                    <a href="#">Comment</a>
-                </div>
-            </div>
-            <div class="media comments">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-circle" width="60" src="~/images/me-2.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Sally</h4>
-                    <p>
-                        Esistono innumerevoli variazioni dei passaggi del Lorem Ipsum, ma la maggior parte hanno subito delle variazioni del tempo, a causa dell’inserimento di passaggi ironici.
-                    </p>
-                    <a href="#">Comment</a>
-                </div>
-            </div>
+
+                if ((User.Identity.IsAuthenticated) && (User.IsInRole("Admin") || User.IsInRole("Moderator")))
+                {
+                    @Html.ActionLink("Edit","EditComment",  new { id = com.id, PostId = com.PostId })
+                    <span> / </span>
+                    @Html.ActionLink("Delete", "DeleteComment",  new { id = com.id })
+                }
+
+            }
             <!--comments-end-->
-
+            <hr />
             <div class="space-60"></div>
             @if (User.Identity.IsAuthenticated)
-            {
+            { @*class= "form-horizontal comment-form"*@
                 <h5 class="margin-b-30">Leave a Comment</h5>
-                <form class="form-horizontal comment-form">
+                <form action="@Url.Action("CreateComment","Posts")" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="PostId" value="@Model.id" />
                     <div class="form-group">
-                        <label for="name1" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="name1">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email1" class="col-sm-2 control-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="email1">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email1" class="col-sm-2 control-label">Comment</label>
+                        <label class="col-sm-2 control-label">Name/Alias</label>
                         <div class="col-sm-10 col-sm-offset-2">
-                            <textarea class="form-control" rows="3" id="comment"></textarea>
+                            <textarea class="form-control" rows="3" id="alias" name="alias"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Comment</label>
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <textarea class="form-control" rows="3" id="comment" name="Body"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="button" class="btn btn-dark btn-lg">Submit</button>
+                            <input type="submit" value="Submit" class="btn btn-dark btn-lg">
                         </div>
                     </div>
                 </form>
             }
             else
             {
-                <h5 class="margin-b-30">To a Comment, please login</h5>
+                string thisPage = Url.Action("Details", "Posts", new { slug = Model.Slug });
+                <h5 class="margin-b-30">
+                    To a Comment, please
+                    @Html.ActionLink("Log in", "Login", "Account", new { returnUrl = thisPage }, null)
+                </h5>
             }
             <div class="space-80"></div>
 
@@ -271,142 +246,142 @@
 
         <div class="col-md-1">
             @*<aside class="sidebar">
-                                <div class="widget">
-                                    <form class="search-widget">
-                                        <input type="text" class="form-control" placeholder="Tpye ans hit enter">
-                                        <button type="button"> <i class="fa fa-search"></i></button>
-                                    </form>
-                                </div>
-                                <div class="widget text-center">
-                                    <h3 class="widget-title">About Me</h3>
-                                    <img src="images/me.jpg" alt="" class="img-circle">
-                                    <div class="space-20"></div>
-                                    <p>
-                                        Craft beer elit seitan exercitation, photo booth et 8-bit kale chips proident chillwave deep v laborum. Aliquip veniam delectus
-                                    </p>
-                                    <a href="#">Read More</a>
-                                </div><!--widget-->
-                                <div class="widget text-center">
-                                    <h3 class="widget-title">Find us On Facebook</h3>
-                                    <div id="fb-root"></div>
-                                    <script>
-                (function (d, s, id) {
-                                                    var js, fjs = d.getElementsByTagName(s)[0];
-                                                    if (d.getElementById(id))
-                                                        return;
-                                                    js = d.createElement(s);
-                                                    js.id = id;
-                                                    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
-                                                    fjs.parentNode.insertBefore(js, fjs);
-                                                }(document, 'script', 'facebook-jssdk'));</script>
-                                    <div class="fb-page" data-href="https://web.facebook.com/rakeshdesigns/" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="false"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://web.facebook.com/rakeshdesigns/"><a href="https://web.facebook.com/rakeshdesigns/">Design_mylife</a></blockquote></div></div>
-                                </div><!--widget-->
-                                <div class="widget">
-                                    <h3 class="widget-title">Popular Post</h3>
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <a href="#">
-                                                <img class="media-object" src="images/img-12.jpg" width="70" alt="...">
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
-                                            <span class="date">8 Dec, 2015</span>
-                                        </div>
-                                    </div><!--media-->
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <a href="#">
-                                                <img class="media-object" src="images/img-11.jpg" width="70" alt="...">
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
-                                            <span class="date">8 Dec, 2015</span>
-                                        </div>
-                                    </div><!--media-->
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <a href="#">
-                                                <img class="media-object" src="images/img-10.jpg" width="70" alt="...">
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
-                                            <span class="date">8 Dec, 2015</span>
-                                        </div>
-                                    </div><!--media-->
-                                </div><!--widget-->
-                                <div class="widget">
-                                    <h3 class="widget-title">Categories</h3>
-                                    <ul class="list-unstyled category-list">
-                                        <li><a href="#">Fashion (3)</a></li>
-                                        <li><a href="#">Lifestyle (2)</a></li>
-                                        <li><a href="#">travel (5)</a></li>
-                                        <li><a href="#">Bootstrap (4)</a></li>
-                                        <li><a href="#">Sports (6)</a></li>
-                                    </ul>
-                                </div><!--widget-->
-                                <div class="widget">
-                                    <h3 class="widget-title">Social</h3>
-                                    <div class="socials clearfix">
-                                        <a href="#" class="social-icon si-dark si-gray-round si-colored-facebook">
-                                            <i class="fa fa-facebook"></i>
-                                            <i class="fa fa-facebook"></i>
-                                        </a>
-                                        <a href="#" class="social-icon si-dark si-gray-round si-colored-twitter">
-                                            <i class="fa fa-twitter"></i>
-                                            <i class="fa fa-twitter"></i>
-                                        </a>
-                                        <a href="#" class="social-icon si-dark si-gray-round si-colored-instagram">
-                                            <i class="fa fa-instagram"></i>
-                                            <i class="fa fa-instagram"></i>
-                                        </a>
-                                        <a href="#" class="social-icon si-dark si-gray-round si-colored-linkedin">
-                                            <i class="fa fa-linkedin"></i>
-                                            <i class="fa fa-linkedin"></i>
-                                        </a>
-                                        <a href="#" class="social-icon si-dark si-gray-round si-colored-pinterest">
-                                            <i class="fa fa-pinterest"></i>
-                                            <i class="fa fa-pinterest"></i>
-                                        </a>
-                                    </div><!--socials-->
-                                </div><!--widget-->
-                                <div class="widget">
-                                    <h3 class="widget-title">Instagram</h3>
-                                    <div class="instagram-list clearfix">
-                                        <a href="#">
-                                            <img src="images/tennisBlue.jpg" alt="" class="img-responsive" />
-                                        </a>
-                                        <a href="#">
-                                            <img src="images/FrenchOpen.jpg" alt="" class="img-responsive" />
-                                        </a>
-                                        <a href="#">
-                                            <img src="images/MilosRaonic.jpg" alt="" class="img-responsive" />
-                                        </a>
-                                        <a href="#">
-                                            <img src="images/QatarOpen.jpg" alt="" class="img-responsive" />
-                                        </a>
-                                        <a href="#">
+                    <div class="widget">
+                        <form class="search-widget">
+                            <input type="text" class="form-control" placeholder="Tpye ans hit enter">
+                            <button type="button"> <i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="widget text-center">
+                        <h3 class="widget-title">About Me</h3>
+                        <img src="images/me.jpg" alt="" class="img-circle">
+                        <div class="space-20"></div>
+                        <p>
+                            Craft beer elit seitan exercitation, photo booth et 8-bit kale chips proident chillwave deep v laborum. Aliquip veniam delectus
+                        </p>
+                        <a href="#">Read More</a>
+                    </div><!--widget-->
+                    <div class="widget text-center">
+                        <h3 class="widget-title">Find us On Facebook</h3>
+                        <div id="fb-root"></div>
+                        <script>
+                    (function (d, s, id) {
+                                                        var js, fjs = d.getElementsByTagName(s)[0];
+                                                        if (d.getElementById(id))
+                                                            return;
+                                                        js = d.createElement(s);
+                                                        js.id = id;
+                                                        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+                                                        fjs.parentNode.insertBefore(js, fjs);
+                                                    }(document, 'script', 'facebook-jssdk'));</script>
+                        <div class="fb-page" data-href="https://web.facebook.com/rakeshdesigns/" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="false"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://web.facebook.com/rakeshdesigns/"><a href="https://web.facebook.com/rakeshdesigns/">Design_mylife</a></blockquote></div></div>
+                    </div><!--widget-->
+                    <div class="widget">
+                        <h3 class="widget-title">Popular Post</h3>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" src="images/img-12.jpg" width="70" alt="...">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
+                                <span class="date">8 Dec, 2015</span>
+                            </div>
+                        </div><!--media-->
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" src="images/img-11.jpg" width="70" alt="...">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
+                                <span class="date">8 Dec, 2015</span>
+                            </div>
+                        </div><!--media-->
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" src="images/img-10.jpg" width="70" alt="...">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">Photo booth anim 8-bit hella</a></h4>
+                                <span class="date">8 Dec, 2015</span>
+                            </div>
+                        </div><!--media-->
+                    </div><!--widget-->
+                    <div class="widget">
+                        <h3 class="widget-title">Categories</h3>
+                        <ul class="list-unstyled category-list">
+                            <li><a href="#">Fashion (3)</a></li>
+                            <li><a href="#">Lifestyle (2)</a></li>
+                            <li><a href="#">travel (5)</a></li>
+                            <li><a href="#">Bootstrap (4)</a></li>
+                            <li><a href="#">Sports (6)</a></li>
+                        </ul>
+                    </div><!--widget-->
+                    <div class="widget">
+                        <h3 class="widget-title">Social</h3>
+                        <div class="socials clearfix">
+                            <a href="#" class="social-icon si-dark si-gray-round si-colored-facebook">
+                                <i class="fa fa-facebook"></i>
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                            <a href="#" class="social-icon si-dark si-gray-round si-colored-twitter">
+                                <i class="fa fa-twitter"></i>
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon si-dark si-gray-round si-colored-instagram">
+                                <i class="fa fa-instagram"></i>
+                                <i class="fa fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-icon si-dark si-gray-round si-colored-linkedin">
+                                <i class="fa fa-linkedin"></i>
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="social-icon si-dark si-gray-round si-colored-pinterest">
+                                <i class="fa fa-pinterest"></i>
+                                <i class="fa fa-pinterest"></i>
+                            </a>
+                        </div><!--socials-->
+                    </div><!--widget-->
+                    <div class="widget">
+                        <h3 class="widget-title">Instagram</h3>
+                        <div class="instagram-list clearfix">
+                            <a href="#">
+                                <img src="images/tennisBlue.jpg" alt="" class="img-responsive" />
+                            </a>
+                            <a href="#">
+                                <img src="images/FrenchOpen.jpg" alt="" class="img-responsive" />
+                            </a>
+                            <a href="#">
+                                <img src="images/MilosRaonic.jpg" alt="" class="img-responsive" />
+                            </a>
+                            <a href="#">
+                                <img src="images/QatarOpen.jpg" alt="" class="img-responsive" />
+                            </a>
+                            <a href="#">
 
-                                            <img src="images/tForever.jpg" alt="" class="img-responsive" />
-                                        </a>
-                                        <a href="#">
-                                            <img src="images/conwaytennisuk.jpg" alt="" class="img-responsive">
-                                        </a>
-                                    </div>
-                                </div><!--widget-->
-                                <div class="widget">
-                                    <h3 class="widget-title">Tag cloud</h3>
-                                    <ul class="list-inline tag-list">
-                                        <li><a href="#">Fashion </a></li>
-                                        <li><a href="#">Lifestyle </a></li>
-                                        <li><a href="#">travel </a></li>
-                                        <li><a href="#">Bootstrap </a></li>
-                                        <li><a href="#">Sports </a></li>
-                                    </ul>
-                                </div>
-                            </aside>*@  <!--sidebar-->
+                                <img src="images/tForever.jpg" alt="" class="img-responsive" />
+                            </a>
+                            <a href="#">
+                                <img src="images/conwaytennisuk.jpg" alt="" class="img-responsive">
+                            </a>
+                        </div>
+                    </div><!--widget-->
+                    <div class="widget">
+                        <h3 class="widget-title">Tag cloud</h3>
+                        <ul class="list-inline tag-list">
+                            <li><a href="#">Fashion </a></li>
+                            <li><a href="#">Lifestyle </a></li>
+                            <li><a href="#">travel </a></li>
+                            <li><a href="#">Bootstrap </a></li>
+                            <li><a href="#">Sports </a></li>
+                        </ul>
+                    </div>
+                </aside>*@  <!--sidebar-->
         </div><!--sidebar col-->
     </div>
 </div>
